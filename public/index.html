@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Landing Profesional</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Loader de pantalla completa: visible hasta que termina la carga total -->
+  <div id="page-loader" class="page-loader" role="status" aria-live="polite" aria-label="Cargando contenido">
+    <div class="loader-spinner" aria-hidden="true"></div>
+    <p class="loader-text">Cargando...</p>
+  </div>
+
+  <nav class="sticky-nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#inicio">HARD GYM</a>
+      <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="main-nav-links">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <div class="nav-links" id="main-nav-links">
+        <a href="#inicio">Inicio</a>
+        <a href="#beneficios">Beneficios</a>
+        <a href="#planes">Planes</a>
+        <a href="#testimonios">Testimonios</a>
+        <a href="#form-section">Contacto</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <header id="inicio" class="hero">
+    <div class="container">
+      <h1>Impulsa tu crecimiento profesional</h1>
+      <p>Únete a nuestra comunidad y recibe contenido exclusivo.</p>
+      <a href="#form-section" class="btn-primary">Quiero unirme</a>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- BENEFICIOS -->
+    <section id="beneficios" class="benefits">
+  <div class="container">
+    <h2>¿Por qué entrenar conmigo?</h2>
+    <div class="benefit-grid">
+      <article class="benefit-card">
+        <img src="img/iamgengym.png" alt="Plan personalizado" />
+        <h3>Plan 100% Personalizado</h3>
+        <p>Cada rutina se adapta a tu nivel, objetivos y estilo de vida.</p>
+      </article>
+
+      <article class="benefit-card">
+        <img src="img/seguimiento.png" alt="Seguimiento constante" />
+        <h3>Seguimiento Constante</h3>
+        <p>No entrenas solo. Ajustamos tu plan cada semana según tu progreso.</p>
+      </article>
+
+      <article class="benefit-card">
+        <img src="img/waltee.png" alt="Resultados medibles" />
+        <h3>Resultados Medibles</h3>
+        <p>Progreso real con métricas claras y evolución visible en cada entrenamiento.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+    <section id="planes" class="plans">
+  <div class="container">
+    <h2>Planes de Entrenamiento</h2>
+    <div class="plan-grid">
+
+      <div class="plan-card">
+        <h3>Plan Inicial</h3>
+        <p class="price">$XX / mes</p>
+        <ul>
+          <li>Rutina personalizada</li>
+          <li>1 ajuste mensual</li>
+          <li>Soporte por WhatsApp</li>
+        </ul>
+        <a href="https://wa.me/5491162970896?text=Hola%2C+quiero+informaci%C3%B3n+sobre+Plan+Inicial" class="btn-primary" rel="noopener noreferrer">Quiero empezar</a>
+      </div>
+
+      <div class="plan-card featured">
+        <h3>Plan Pro</h3>
+        <p class="price">$XX / mes</p>
+        <ul>
+          <li>Rutina personalizada</li>
+          <li>Seguimiento semanal</li>
+          <li>Evaluación física mensual</li>
+          <li>Soporte prioritario</li>
+        </ul>
+        <a href="https://wa.me/5491162970896?text=Hola%2C+quiero+informaci%C3%B3n+sobre+Plan+Pro" class="btn-primary" rel="noopener noreferrer">Quiero resultados</a>
+      </div>
+
+      <div class="plan-card">
+        <h3>Plan Elite</h3>
+        <p class="price">$XX / mes</p>
+        <ul>
+          <li>Entrenamiento presencial</li>
+          <li>Plan nutricional básico</li>
+          <li>Seguimiento completo</li>
+        </ul>
+        <a href="https://wa.me/5491162970896?text=Hola%2C+quiero+informaci%C3%B3n+sobre+Plan+Elite" class="btn-primary" rel="noopener noreferrer">Entrenar ahora</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+
+  <section id="testimonios" class="testimonials">
+  <div class="container">
+    <h2>Resultados Reales</h2>
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <p>"En 3 meses bajé 8kg y gané fuerza como nunca."</p>
+        <strong>- Carlos M.</strong>
+      </div>
+      <div class="testimonial-card">
+        <p>"Por primera vez entreno con disciplina y motivación constante."</p>
+        <strong>- Laura G.</strong>
+      </div>
+      <div class="testimonial-card">
+        <p>"El seguimiento semanal me ayudó a superar mis límites y lograr mis metas."</p>
+        <strong>- Martín S.</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  <section class="final-cta">
+  <div class="container">
+    <h2>Tu transformación empieza hoy</h2>
+    <p>No postergues más tus resultados. Hablemos por WhatsApp ahora.</p>
+    <a href="https://wa.me/5491162970896?text=Hola%2C+quiero+comenzar+mi+transformación" class="btn-primary" rel="noopener noreferrer">Comenzar ahora</a>
+  </div>
+</section>
+
+
+    <!-- FORMULARIO -->
+    <section id="form-section" class="form-section">
+      <div class="container">
+        <h2>Únete ahora</h2>
+
+        <form id="lead-form" novalidate>
+          
+          <div class="form-group">
+            <label for="name">Nombre</label>
+            <input 
+              type="text" 
+              id="name" 
+              name="name" 
+              placeholder="Ej: Juan Perez"
+              required 
+              minlength="2"
+            />
+            <small class="error-message" id="name-error"></small>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              placeholder="Ej: juan@email.com"
+              required
+            />
+            <small class="error-message" id="email-error"></small>
+          </div>
+
+          <div class="form-group">
+            <label for="consulta">Consulta</label>
+            <textarea 
+              name="consulta" 
+              id="consulta" 
+              placeholder="Contame tu objetivo, nivel actual y disponibilidad."
+              required
+              minlength="10"
+              maxlength="500"
+            ></textarea>
+            <span id="consulta-error" class="error-message"></span>
+
+
+          </div>
+
+          <button type="submit" class="btn-primary">
+            Enviar
+          </button>
+
+          <p id="form-response"></p>
+
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="js/main.js"></script>
+  <script src="js/whatsapp.js"></script>
+</body>
+</html>
