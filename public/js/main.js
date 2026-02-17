@@ -11,6 +11,14 @@ const consultaError = document.getElementById("consulta-error"); // si querés m
 
 
 
+// Base URL de API:
+// - En localhost usa el backend local.
+// - En produccion usa Render.
+const API_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:3000"
+    : "https://proyect-landing-page-fullstack.onrender.com";
+
 const submitButton = form.querySelector("button");
 
 // Oculta el loader con una salida suave y luego lo retira del flujo.
@@ -71,7 +79,7 @@ form.addEventListener("submit", async (e) => {
   submitButton.disabled = true;
   submitButton.textContent = "Enviando...";
 
-  const response = await fetch("/api/leads", {
+  const response = await fetch(`${API_BASE_URL}/api/leads`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

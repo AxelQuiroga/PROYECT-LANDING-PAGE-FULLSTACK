@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import connectDB from "./server/config/db.js";
@@ -19,6 +20,17 @@ connectDB();
 
 //middlewares
 app.use(express.json());
+app.use(
+  cors({
+    origin: [
+      "https://proyect-landing-page-fullstack-dmvg2c9eq-axelquirogas-projects.vercel.app",
+      "http://localhost:3000",
+      "http://127.0.0.1:3000",
+    ],
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
 
 app.use(express.static(path.join(__dirname, "public")));
 
