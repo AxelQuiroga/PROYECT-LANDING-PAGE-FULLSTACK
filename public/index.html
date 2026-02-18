@@ -151,6 +151,19 @@
         <h2>Únete ahora</h2>
 
         <form id="lead-form" novalidate>
+          <div class="hp-field" aria-hidden="true">
+            <label for="website">Sitio web</label>
+            <input
+              type="text"
+              id="website"
+              name="website"
+              tabindex="-1"
+              autocomplete="off"
+            />
+          </div>
+
+          <input type="hidden" id="form-started-at" name="formStartedAt" />
+          <input type="hidden" id="captcha-token" name="captchaToken" />
           
           <div class="form-group">
             <label for="name">Nombre</label>
@@ -191,6 +204,9 @@
 
 
           </div>
+
+          <div id="captcha-container" class="captcha-container"></div>
+          <small id="captcha-error" class="error-message"></small>
 
           <button type="submit" class="btn-primary">
             Enviar

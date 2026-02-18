@@ -478,6 +478,22 @@ form {
   font-size: 0.8rem;
 }
 
+.hp-field {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.captcha-container {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  min-height: 65px;
+}
+
 #form-response {
   margin-top: 1rem;
   font-weight: bold;

@@ -2,11 +2,20 @@ import express from "express";
 import Lead from "../models/Lead.js";
 
 import validateLead from "../middleware/validateLead.js";
+import antiBotLead, { getCaptchaConfig } from "../middleware/antiBotLead.js";
 
 const router = express.Router();
 
+// GET /api/leads/config
+router.get("/config", (_req, res) => {
+  return res.status(200).json({
+    success: true,
+    captcha: getCaptchaConfig(),
+  });
+});
+
 // POST /api/leads
-router.post("/", validateLead, async (req, res) => {
+router.post("/", antiBotLead, validateLead, async (req, res) => {
   try {
     const { name, email, consulta } = req.body;
 

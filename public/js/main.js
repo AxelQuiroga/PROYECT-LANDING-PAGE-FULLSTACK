@@ -7,9 +7,12 @@ const nameError = document.getElementById("name-error");
 const emailError = document.getElementById("email-error");
 const formResponse = document.getElementById("form-response");
 const consultaInput = document.getElementById("consulta");
-const consultaError = document.getElementById("consulta-error"); // si querés mensaje
-
-
+const consultaError = document.getElementById("consulta-error");
+const honeypotInput = document.getElementById("website");
+const formStartedAtInput = document.getElementById("form-started-at");
+const captchaTokenInput = document.getElementById("captcha-token");
+const captchaContainer = document.getElementById("captcha-container");
+const captchaError = document.getElementById("captcha-error");
 
 // Base URL de API:
 // - En localhost usa el backend local.
@@ -20,6 +23,111 @@ const API_BASE_URL =
     : "https://proyect-landing-page-fullstack.onrender.com";
 
 const submitButton = form.querySelector("button");
+const captchaState = {
+  enabled: false,
+  provider: "none",
+  siteKey: "",
+  widgetId: null,
+};
+
+function setFormStartedAt() {
+  if (!formStartedAtInput) return;
+  formStartedAtInput.value = String(Date.now());
+}
+
+function loadExternalScript(src) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = true;
+    script.defer = true;
+    script.onload = resolve;
+    script.onerror = () => reject(new Error("No se pudo cargar el script CAPTCHA."));
+    document.head.appendChild(script);
+  });
+}
+
+function resetCaptchaWidget() {
+  if (!captchaState.enabled) return;
+
+  if (captchaTokenInput) {
+    captchaTokenInput.value = "";
+  }
+
+  if (captchaState.provider === "turnstile" && window.turnstile && captchaState.widgetId !== null) {
+    window.turnstile.reset(captchaState.widgetId);
+  }
+
+  if (captchaState.provider === "recaptcha" && window.grecaptcha && captchaState.widgetId !== null) {
+    window.grecaptcha.reset(captchaState.widgetId);
+  }
+}
+
+function isCaptchaReadyToSubmit() {
+  if (!captchaState.enabled) return true;
+  const token = captchaTokenInput?.value?.trim() || "";
+
+  if (token) return true;
+
+  if (captchaError) {
+    captchaError.textContent = "Completa el CAPTCHA para continuar.";
+  }
+
+  return false;
+}
+
+async function initCaptcha() {
+  if (!captchaContainer || !captchaTokenInput) return;
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/leads/config`);
+    if (!response.ok) return;
+
+    const data = await response.json();
+    const captchaConfig = data?.captcha;
+
+    if (!captchaConfig?.enabled) return;
+
+    captchaState.enabled = true;
+    captchaState.provider = captchaConfig.provider;
+    captchaState.siteKey = captchaConfig.siteKey;
+
+    if (captchaState.provider === "turnstile") {
+      await loadExternalScript("https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit");
+
+      captchaState.widgetId = window.turnstile.render(captchaContainer, {
+        sitekey: captchaState.siteKey,
+        callback: (token) => {
+          captchaTokenInput.value = token;
+          if (captchaError) captchaError.textContent = "";
+        },
+        "expired-callback": () => {
+          captchaTokenInput.value = "";
+        },
+      });
+      return;
+    }
+
+    if (captchaState.provider === "recaptcha") {
+      await loadExternalScript("https://www.google.com/recaptcha/api.js?render=explicit");
+
+      captchaState.widgetId = window.grecaptcha.render(captchaContainer, {
+        sitekey: captchaState.siteKey,
+        callback: (token) => {
+          captchaTokenInput.value = token;
+          if (captchaError) captchaError.textContent = "";
+        },
+        "expired-callback": () => {
+          captchaTokenInput.value = "";
+        },
+      });
+    }
+  } catch (error) {
+    if (captchaError) {
+      captchaError.textContent = "No se pudo cargar el CAPTCHA. Intenta recargar.";
+    }
+  }
+}
 
 // Oculta el loader con una salida suave y luego lo retira del flujo.
 function hidePageLoader() {
@@ -27,22 +135,24 @@ function hidePageLoader() {
   pageLoader.classList.add("is-hidden");
   pageLoader.setAttribute("aria-hidden", "true");
 
-  // Espera a que termine la transición para removerlo del DOM.
+  // Espera a que termine la transicion para removerlo del DOM.
   setTimeout(() => {
     pageLoader.remove();
   }, 500);
 }
 
-// Espera a que cargue TODO (HTML, CSS, imágenes, etc.).
+// Espera a que cargue TODO (HTML, CSS, imagenes, etc.).
 window.addEventListener("load", () => {
   requestAnimationFrame(hidePageLoader);
 });
 
-// Fallback: si ya está cargada la página al ejecutar este script, lo oculta igual.
+// Fallback: si ya esta cargada la pagina al ejecutar este script, lo oculta igual.
 if (document.readyState === "complete") {
   requestAnimationFrame(hidePageLoader);
 }
 
+setFormStartedAt();
+initCaptcha();
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -54,64 +164,71 @@ form.addEventListener("submit", async (e) => {
   emailError.textContent = "";
   formResponse.textContent = "";
   consultaError.textContent = "";
+  if (captchaError) captchaError.textContent = "";
 
-  // Validación nombre
+  // Validacion nombre
   if (nameInput.value.trim().length < 2) {
     nameError.textContent = "El nombre debe tener al menos 2 caracteres";
     isValid = false;
   }
 
-  // Validación email
+  // Validacion email
   const emailRegex = /^\S+@\S+\.\S+$/;
   if (!emailRegex.test(emailInput.value.trim())) {
-    emailError.textContent = "Email inválido";
+    emailError.textContent = "Email invalido";
     isValid = false;
   }
-  //consulta
+
+  // Consulta
   if (consultaInput.value.trim().length < 10) {
-  consultaError.textContent = "La consulta debe tener al menos 10 caracteres";
-  isValid = false;
-}
+    consultaError.textContent = "La consulta debe tener al menos 10 caracteres";
+    isValid = false;
+  }
+
+  if (!isCaptchaReadyToSubmit()) {
+    isValid = false;
+  }
 
   if (!isValid) return;
 
   try {
-  submitButton.disabled = true;
-  submitButton.textContent = "Enviando...";
+    submitButton.disabled = true;
+    submitButton.textContent = "Enviando...";
 
-  const response = await fetch(`${API_BASE_URL}/api/leads`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      name: nameInput.value.trim(),
-      email: emailInput.value.trim(),
-      consulta: consultaInput.value.trim(),
-    }),
+    const response = await fetch(`${API_BASE_URL}/api/leads`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: nameInput.value.trim(),
+        email: emailInput.value.trim(),
+        consulta: consultaInput.value.trim(),
+        website: honeypotInput ? honeypotInput.value.trim() : "",
+        formStartedAt: formStartedAtInput ? formStartedAtInput.value : "",
+        captchaToken: captchaTokenInput ? captchaTokenInput.value.trim() : "",
+      }),
+    });
 
-  });
+    const data = await response.json();
 
-  const data = await response.json();
-
-  if (response.ok) {
-    formResponse.textContent = "Formulario enviado correctamente. Te contactaremos pronto.";
-    formResponse.style.color = "green";
-    form.reset();
-  } else {
-    formResponse.textContent = data.message;
-    formResponse.style.color = "red";
+    if (response.ok) {
+      formResponse.textContent = "Formulario enviado correctamente. Te contactaremos pronto.";
+      formResponse.style.color = "green";
+      form.reset();
+      setFormStartedAt();
+      resetCaptchaWidget();
+    } else {
+      formResponse.textContent = data.message;
+      formResponse.style.color = "red";
     }
-
-
-} catch (error) {
-  formResponse.textContent = "Error de conexión con el servidor.";
-  formResponse.style.color = "red";
-} finally {
-  submitButton.disabled = false;
-  submitButton.textContent = "Enviar";
-}
-
+  } catch (error) {
+    formResponse.textContent = "Error de conexion con el servidor.";
+    formResponse.style.color = "red";
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "Enviar";
+  }
 });
 
 const stickyNav = document.querySelector(".sticky-nav");

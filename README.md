@@ -125,7 +125,10 @@ Guarda un lead nuevo.
 {
   "name": "Juan Perez",
   "email": "juan@email.com",
-  "consulta": "Quiero mejorar fuerza y bajar grasa."
+  "consulta": "Quiero mejorar fuerza y bajar grasa.",
+  "website": "",
+  "formStartedAt": 1739900000000,
+  "captchaToken": "token-opcional-segun-config"
 }
 ```
 
@@ -133,7 +136,12 @@ Guarda un lead nuevo.
 
 - `201`: lead guardado correctamente.
 - `400`: datos invalidos o contenido no permitido.
+- `429`: demasiados intentos o envio demasiado rapido.
 - `500`: error interno del servidor.
+
+### `GET /api/leads/config`
+
+Devuelve configuracion de seguridad del formulario (captcha/minimo de tiempo) para el frontend.
 
 ## Seguridad y validaciones implementadas
 
@@ -143,6 +151,9 @@ Guarda un lead nuevo.
 - Sanitizacion de texto contra entradas maliciosas.
 - Filtro de palabras sospechosas en consulta.
 - Rate limiting sobre rutas API.
+- Honeypot oculto (`website`) para bots de autocompletado.
+- Timeout minimo antes de enviar (`FORM_MIN_SUBMIT_MS`).
+- CAPTCHA opcional en backend (Cloudflare Turnstile o Google reCAPTCHA).
 
 ## Responsive design
 
@@ -168,6 +179,11 @@ En `.env`:
 ```env
 MONGO_URI=tu_string_de_conexion_mongodb
 PORT=3000
+FORM_MIN_SUBMIT_MS=4000
+HONEYPOT_FIELD=website
+CAPTCHA_PROVIDER=none
+CAPTCHA_SITE_KEY=
+CAPTCHA_SECRET_KEY=
 ```
 
 ## Estado actual del proyecto
