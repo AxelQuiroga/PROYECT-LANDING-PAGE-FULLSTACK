@@ -186,6 +186,15 @@ CAPTCHA_SITE_KEY=
 CAPTCHA_SECRET_KEY=
 ```
 
+En produccion, configurar:
+
+```env
+NODE_ENV=production
+CAPTCHA_PROVIDER=turnstile
+CAPTCHA_SITE_KEY=tu_site_key_turnstile
+CAPTCHA_SECRET_KEY=tu_secret_key_turnstile
+```
+
 ## Estado actual del proyecto
 
 Proyecto funcional para captacion de leads con:

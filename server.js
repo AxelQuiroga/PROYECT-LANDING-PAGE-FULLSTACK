@@ -15,6 +15,25 @@ dotenv.config();
 
 const app = express();
 
+function assertCaptchaConfigForProduction() {
+  const isProduction = process.env.NODE_ENV === "production";
+  if (!isProduction) return;
+
+  const provider = (process.env.CAPTCHA_PROVIDER || "").toLowerCase().trim();
+  const siteKey = (process.env.CAPTCHA_SITE_KEY || "").trim();
+  const secretKey = (process.env.CAPTCHA_SECRET_KEY || "").trim();
+
+  if (provider !== "turnstile") {
+    throw new Error("En produccion, CAPTCHA_PROVIDER debe ser 'turnstile'.");
+  }
+
+  if (!siteKey || !secretKey) {
+    throw new Error("En produccion, define CAPTCHA_SITE_KEY y CAPTCHA_SECRET_KEY.");
+  }
+}
+
+assertCaptchaConfigForProduction();
+
 // Conectar base de datos
 connectDB();
 
