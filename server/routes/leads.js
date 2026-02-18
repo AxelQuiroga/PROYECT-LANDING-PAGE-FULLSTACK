@@ -10,6 +10,16 @@ router.post("/", validateLead, async (req, res) => {
   try {
     const { name, email, consulta } = req.body;
 
+    const existingLeadsCount = await Lead.countDocuments({ email });
+    const maxSubmissionsPerEmail = 3;
+
+    if (existingLeadsCount >= maxSubmissionsPerEmail) {
+      return res.status(429).json({
+        success: false,
+        message: "Este email ya alcanzo el limite de 3 envios.",
+      });
+    }
+
     const newLead = new Lead({
       name,
       email,
